@@ -30,8 +30,8 @@ class BlogController extends Controller
     }
     public function store(Request $request ){
         $validator=Validator::make($request->all(),[
-            'title' => 'required|min:10',
-            'author'=>'required|min:3',
+            'title' => 'required',
+            'author'=>'required',
         ]);
         if($validator->fails()){
             return response()->json([
@@ -65,8 +65,8 @@ class BlogController extends Controller
         } 
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|min:10',
-            'author' => 'required|min:3'
+            'title' => 'required',
+            'author' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -84,7 +84,24 @@ class BlogController extends Controller
         $blog->save();
         }
 
-    public function destroy(){
+        public function destroy($id) {
 
-    }    
+            $blog = Blog::find($id);
+    
+            if ($blog == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Blog not found.',
+                ]);
+            }
+    
+            // Delete blog from DB
+            $blog->delete();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Blog deleted successfully.'            
+            ]);
+    
+         }    
 }
